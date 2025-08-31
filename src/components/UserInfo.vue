@@ -13,11 +13,6 @@
         <h3 class="font-semibold text-gray-900" data-testid="user-name">
           {{ user.name }}
         </h3>
-        <p class="text-sm text-gray-600" data-testid="user-role">
-          {{ user.role === 'admin' ? 'Administrator' : 'User' }}
-          <span v-if="user.role === 'admin'" class="text-purple-600">• Can see all todos</span>
-          <span v-else class="text-blue-600">• Can see own todos only</span>
-        </p>
       </div>
     </div>
     
