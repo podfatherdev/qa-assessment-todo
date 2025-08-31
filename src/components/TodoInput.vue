@@ -27,11 +27,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-interface Emits {
-  (e: 'add-todo', text: string): void;
-}
-
-const emit = defineEmits<Emits>();
+const emit = defineEmits<{
+    (e: "add-todo", text: string): void;
+}>();
 
 const newTodo = ref('');
 const error = ref('');

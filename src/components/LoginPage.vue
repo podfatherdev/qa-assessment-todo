@@ -70,11 +70,9 @@
 import { ref } from 'vue';
 import { AuthService } from '../services/authService';
 
-interface Emits {
-  (e: 'login-success'): void;
-}
-
-const emit = defineEmits<Emits>();
+const emit = defineEmits<{
+    (e: "login-success"): void;
+}>();
 
 const loading = ref(false);
 const error = ref('');

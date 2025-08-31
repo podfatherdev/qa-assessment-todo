@@ -150,21 +150,18 @@
 import { ref, nextTick, computed } from 'vue';
 import type { Todo } from '../types/todo';
 
-interface Props {
-  todo: Todo;
-  showUserIndicator?: boolean;
-  currentUserRole?: string;
-}
+const props = defineProps<{
+    todo: Todo;
+    showUserIndicator?: boolean;
+    currentUserRole?: string;
+}>();
 
-interface Emits {
-  (e: 'toggle', id: number): void;
-  (e: 'edit', id: number, text: string): void;
-  (e: 'delete', id: number): void;
-  (e: 'reassign', id: number, userId: number): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const emit = defineEmits<{
+    (e: "toggle", id: number): void;
+    (e: "edit", id: number, text: string): void;
+    (e: "delete", todo: Todo): void;
+    (e: "reassign", id: number, userId: number): void;
+}>();
 
 const editing = ref(false);
 const editText = ref(props.todo.text);

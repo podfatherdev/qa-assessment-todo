@@ -37,19 +37,16 @@
 <script setup lang="ts">
 import type { FilterType } from '../types/todo';
 
-interface Props {
-  currentFilter: FilterType;
-  activeCount: number;
-  hasCompleted: boolean;
-}
+const props = defineProps<{
+    currentFilter: FilterType;
+    activeCount: number;
+    hasCompleted: boolean;
+}>();
 
-interface Emits {
-  (e: 'filter-change', filter: FilterType): void;
-  (e: 'clear-completed'): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
+const emit = defineEmits<{
+    (e: "filter-change", filter: FilterType): void;
+    (e: "clear-completed"): void;
+}>();
 
 const filters = [
   { value: 'all' as FilterType, label: 'All' },
