@@ -1,30 +1,28 @@
 <!--
   UserItem Component
-  
+
   A user management item component styled to match TodoItem. Features inline editing
   for user names (double-click to edit) and a role selector dropdown. Includes
   hover animations and visual role indicators.
-  
+
   Props:
   - user: User - The user object to display and manage
-  
+
   Events:
   - update-name: (userId: number, name: string) - Emitted when user name is changed
   - update-role: (userId: number, role: 'admin' | 'user') - Emitted when user role is changed
 -->
 <template>
-  <div 
+  <div
     class="group bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all duration-200 animate-slide-up"
   >
     <div class="flex items-center gap-3">
-      <!-- User avatar -->
-      <div
-        :class="[
-          'flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold',
-          user.role === 'admin' ? 'bg-purple-500' : 'bg-blue-500'
-        ]"
-      >
-        {{ user.name.charAt(0) }}
+      <!-- Role selector -->
+      <div class="flex-shrink-0">
+        <RoleSelector
+          :current-role="user.role"
+          @role-change="changeRole"
+        />
       </div>
 
       <!-- User info with inline editing -->
@@ -39,8 +37,8 @@
           class="w-full px-0 py-1 text-gray-900 bg-transparent border-0 border-b-2 border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 text-lg font-medium"
           data-testid="edit-user-input"
         />
-        <div v-else @dblclick="startEdit" class="cursor-pointer select-none">
-          <h3 
+        <div v-else @dblclick="startEdit" class="flex flex-row gap-2 items-baseline cursor-pointer select-none">
+          <h3
             class="font-medium text-gray-900 text-lg mb-1"
             data-testid="user-name"
           >
@@ -49,26 +47,7 @@
           <p class="text-sm text-gray-500 mb-1" data-testid="username">
             @{{ user.username }}
           </p>
-          <span
-            :class="[
-              'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-              user.role === 'admin' 
-                ? 'bg-purple-100 text-purple-800' 
-                : 'bg-blue-100 text-blue-800'
-            ]"
-            data-testid="user-role-badge"
-          >
-            {{ user.role }}
-          </span>
         </div>
-      </div>
-
-      <!-- Role selector -->
-      <div class="flex-shrink-0">
-        <RoleSelector 
-          :current-role="user.role"
-          @role-change="changeRole"
-        />
       </div>
 
       <!-- Action buttons (appear on hover) -->
@@ -120,11 +99,11 @@ const saveEdit = () => {
     cancelEdit();
     return;
   }
-  
+
   if (editName.value.trim() !== props.user.name) {
     emit('update-name', props.user.id, editName.value.trim());
   }
-  
+
   editing.value = false;
 };
 
