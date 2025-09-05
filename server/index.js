@@ -18,11 +18,11 @@ const users = [
 
 // In-memory database with user assignments
 let todos = [
+  { id: 1, text: 'Manage system settings', completed: true, updatedAt: new Date(), userId: 1 },
+  { id: 2, text: 'Review all user tasks', completed: false, updatedAt: new Date(), userId: 1 },
   { id: 3, text: 'Land an interview at Podfather', completed: true, updatedAt: new Date(), userId: 2 },
-  { id: 1, text: 'Charm offensive', completed: false, updatedAt: new Date(), userId: 2 },
-  { id: 2, text: 'Get the job', completed: false, updatedAt: new Date(), userId: 2 },
-  { id: 4, text: 'Review all user tasks', completed: false, updatedAt: new Date(), userId: 1 },
-  { id: 5, text: 'Manage system settings', completed: true, updatedAt: new Date(), userId: 1 },
+  { id: 4, text: 'Charm offensive', completed: false, updatedAt: new Date(), userId: 2 },
+  { id: 5, text: 'Get the job', completed: false, updatedAt: new Date(), userId: 2 },
 ];
 
 let nextId = 6;
@@ -50,7 +50,7 @@ const authenticateToken = (req, res, next) => {
 // POST /api/auth/login - Login with username
 app.post('/api/auth/login', (req, res) => {
   const { username } = req.body;
-  
+
   const user = users.find(u => u.username === username);
   if (!user) {
     return res.status(401).json({ error: 'User not found' });
@@ -93,7 +93,7 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
 // GET /api/todos - Get todos (filtered by user role)
 app.get('/api/todos', authenticateToken, (req, res) => {
   let userTodos;
-  
+
   if (req.user.role === 'admin') {
     // Admin sees all todos
     userTodos = todos;
@@ -101,14 +101,14 @@ app.get('/api/todos', authenticateToken, (req, res) => {
     // Regular users see only their own todos
     userTodos = todos.filter(todo => todo.userId === req.user.id);
   }
-  
+
   res.json(userTodos);
 });
 
 // POST /api/todos - Create new todo (assigned to current user)
 app.post('/api/todos', authenticateToken, (req, res) => {
   const { text } = req.body;
-  
+
   if (!text || text.trim() === '') {
     return res.status(400).json({ error: 'Todo text is required' });
   }
@@ -129,15 +129,15 @@ app.post('/api/todos', authenticateToken, (req, res) => {
 app.put('/api/todos/:id', authenticateToken, (req, res) => {
   const id = parseInt(req.params.id);
   const { text, completed } = req.body;
-  
+
   const todoIndex = todos.findIndex(todo => todo.id === id);
-  
+
   if (todoIndex === -1) {
     return res.status(404).json({ error: 'Todo not found' });
   }
 
   const todo = todos[todoIndex];
-  
+
   // Check if user owns the todo or is admin
   if (todo.userId !== req.user.id && req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Access denied' });
@@ -147,7 +147,7 @@ app.put('/api/todos/:id', authenticateToken, (req, res) => {
     todos[todoIndex].text = text.trim();
     todos[todoIndex].updatedAt = new Date();
   }
-  
+
   if (completed !== undefined) {
     todos[todoIndex].completed = completed;
     todos[todoIndex].updatedAt = new Date();
@@ -160,7 +160,7 @@ app.put('/api/todos/:id', authenticateToken, (req, res) => {
 app.delete('/api/todos/:text', authenticateToken, (req, res) => {
   const text = req.params.text;
   const todo = todos.find(todo => todo.text === text);
-  
+
   if (!todo) {
     return res.status(404).json({ error: 'Todo not found: ' + text });
   }
@@ -177,7 +177,7 @@ app.delete('/api/todos/:text', authenticateToken, (req, res) => {
 // DELETE /api/todos/completed - Delete all completed todos (filtered by user role)
 app.delete('/api/todos/completed', authenticateToken, (req, res) => {
   const initialLength = todos.length;
-  
+
   if (req.user.role === 'admin') {
     // Admin can clear all completed todos
     todos = todos.filter(todo => !todo.completed);
@@ -185,7 +185,7 @@ app.delete('/api/todos/completed', authenticateToken, (req, res) => {
     // Regular users can only clear their own completed todos
     todos = todos.filter(todo => !todo.completed || todo.userId !== req.user.id);
   }
-  
+
   const deletedCount = initialLength - todos.length;
   res.json({ message: `${deletedCount} completed todos deleted` });
 });
@@ -194,14 +194,14 @@ app.delete('/api/todos/completed', authenticateToken, (req, res) => {
 app.put('/api/todos/:id/reassign', authenticateToken, (req, res) => {
   const id = parseInt(req.params.id);
   const { userId } = req.body;
-  
+
   // Only admins can reassign todos
   if (req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Only admins can reassign todos' });
   }
-  
+
   const todoIndex = todos.findIndex(todo => todo.id === id);
-  
+
   if (todoIndex === -1) {
     return res.status(404).json({ error: 'Todo not found' });
   }
