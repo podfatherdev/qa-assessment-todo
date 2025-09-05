@@ -68,11 +68,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { AuthService } from '../services/authService';
 
 const emit = defineEmits<{
     (e: "login-success"): void;
 }>();
+
+const router = useRouter();
 
 const loading = ref(false);
 const error = ref('');
@@ -83,7 +86,7 @@ const loginAs = async (role: 'admin' | 'user') => {
 
   try {
     await AuthService.login(role);
-    emit('login-success');
+    router.push('/todos');
   } catch (err) {
     error.value = 'Login failed. Please try again.';
   } finally {
