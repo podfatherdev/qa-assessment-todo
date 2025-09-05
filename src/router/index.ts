@@ -6,8 +6,9 @@ import LoginPage from '../components/LoginPage.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '', redirect: '/login' },
     {
-      path: '/',
+      path: '/login',
       name: 'login',
       component: LoginPage,
       meta: { requiresAuth: false }
@@ -32,13 +33,14 @@ router.beforeEach(async (to, _from, next) => {
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     // Route requires auth but user is not authenticated
-    next('/')
-  } else if (to.name === 'login' && isAuthenticated) {
-    // User is authenticated but trying to access login page
-    next('/todos')
-  } else {
-    next()
+    return next('/')
   }
+
+  if (to.name === 'login' && isAuthenticated) {
+    AuthService.logout()
+  }
+
+  next()
 })
 
 export default router

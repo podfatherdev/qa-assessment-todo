@@ -14,7 +14,7 @@
 
       <div class="bg-white rounded-xl shadow-lg p-6 animate-fade-in">
         <TodoInput @add-todo="addTodo" />
-        
+
         <TodoFilter
           :current-filter="currentFilter"
           :active-count="activeCount"
@@ -107,11 +107,11 @@ const filteredTodos = computed(() => {
   }
 });
 
-const activeCount = computed(() => 
+const activeCount = computed(() =>
   todos.value.filter(todo => !todo.completed).length
 );
 
-const hasCompleted = computed(() => 
+const hasCompleted = computed(() =>
   todos.value.some(todo => todo.completed)
 );
 
@@ -119,7 +119,7 @@ const emptyStateMessage = computed(() => {
   if (todos.value.length === 0) {
     return 'No todos yet. Add one above!';
   }
-  
+
   switch (currentFilter.value) {
     case 'active':
       return 'No active todos. Great job!';
@@ -136,19 +136,19 @@ const loadCurrentUser = async () => {
   } catch (err) {
     // Token might be expired or invalid
     AuthService.logout();
-    router.push('/');
+    router.push({ name: 'login' });
   }
 };
 
 const handleLogout = () => {
   AuthService.logout();
-  router.push('/');
+  router.push({ name: 'login' });
 };
 
 const loadTodos = async () => {
   loading.value = true;
   error.value = '';
-  
+
   try {
     todos.value = await TodoService.getAllTodos();
   } catch (err) {
@@ -170,12 +170,12 @@ const addTodo = async (text: string) => {
 const toggleTodo = async (id: number) => {
   const todo = todos.value.find(t => t.id === id);
   if (!todo) return;
-  
+
   try {
-    const updatedTodo = await TodoService.updateTodo(id, { 
-      completed: !todo.completed 
+    const updatedTodo = await TodoService.updateTodo(id, {
+      completed: !todo.completed
     });
-    
+
     const index = todos.value.findIndex(t => t.id === id);
     todos.value[index] = updatedTodo;
   } catch (err) {
@@ -186,7 +186,7 @@ const toggleTodo = async (id: number) => {
 const editTodo = async (id: number, text: string) => {
   try {
     const updatedTodo = await TodoService.updateTodo(id, { text });
-    
+
     const index = todos.value.findIndex(t => t.id === id);
     todos.value[index] = updatedTodo;
   } catch (err) {
@@ -215,7 +215,7 @@ const clearCompleted = async () => {
 const reassignTodo = async (id: number, userId: number) => {
   try {
     const updatedTodo = await TodoService.reassignTodo(id, userId);
-    
+
     const index = todos.value.findIndex(t => t.id === id);
     todos.value[index] = updatedTodo;
   } catch (err) {

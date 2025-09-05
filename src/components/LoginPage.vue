@@ -86,7 +86,7 @@ const loginAs = async (role: 'admin' | 'user') => {
 
   try {
     await AuthService.login(role);
-    router.push('/todos');
+    router.push({ name: 'todos' });
   } catch (err) {
     error.value = 'Login failed. Please try again.';
   } finally {
