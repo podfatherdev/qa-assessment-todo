@@ -1,16 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex items-center justify-center">
     <div class="max-w-md w-full space-y-8">
-      <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">
-          BugDo
-        </h1>
-        <p class="text-gray-600 mb-8">
-          Please log in to continue
-        </p>
-      </div>
+      <Header 
+        title="BugDo" 
+        subtitle="Please log in to continue"
+      />
 
-      <div class="bg-white rounded-xl shadow-lg p-8 space-y-6">
+      <Panel>
         <div class="text-center">
           <h2 class="text-2xl font-semibold text-gray-900 mb-6">
             Choose Your Role
@@ -61,7 +57,7 @@
             {{ error }}
           </p>
         </div>
-      </div>
+      </Panel>
     </div>
   </div>
 </template>
@@ -70,6 +66,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { AuthService } from '../services/authService';
+import Header from './Header.vue';
+import Panel from './Panel.vue';
 
 const emit = defineEmits<{
     (e: "login-success"): void;

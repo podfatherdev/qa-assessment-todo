@@ -1,18 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-2xl">
-      <header class="text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2 animate-fade-in">
-          BugDo
-        </h1>
-        <p class="text-gray-600">
-          I got a whole lotta <em>bugs</em> todo
-        </p>
-      </header>
+      <Header 
+        title="BugDo" 
+        subtitle="I got a whole lotta <em>bugs</em> todo"
+      />
 
       <UserInfo v-if="currentUser" :user="currentUser" @logout="handleLogout" />
 
-      <div class="bg-white rounded-xl shadow-lg p-6 animate-fade-in">
+      <Panel>
         <TodoInput @add-todo="addTodo" />
 
         <TodoFilter
@@ -69,7 +65,7 @@
             />
           </div>
         </div>
-      </div>
+      </Panel>
 
       <footer class="text-center mt-8 text-gray-500 text-sm">
         <p>Double-click to edit a todo • Built with Vue 3 & Express</p>
@@ -81,6 +77,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import Header from '../components/Header.vue';
+import Panel from '../components/Panel.vue';
 import UserInfo from '../components/UserInfo.vue';
 import TodoInput from '../components/TodoInput.vue';
 import TodoItem from '../components/TodoItem.vue';
