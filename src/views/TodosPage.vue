@@ -1,10 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-2xl">
-      <Header 
-        title="BugDo" 
-        subtitle="I got a whole lotta <em>bugs</em> todo"
-      />
+      <Header>
+        BugDo
+        <template #subtitle>
+          I got a whole lotta <em>bugs</em> todo
+        </template>
+      </Header>
 
       <UserInfo v-if="currentUser" :user="currentUser" @logout="handleLogout" />
 
@@ -68,7 +70,7 @@
       </Panel>
 
       <footer class="text-center mt-8 text-gray-500 text-sm">
-        <p>Double-click to edit a todo • Built with Vue 3 & Express</p>
+        Double-click to edit a todo
       </footer>
     </div>
   </div>

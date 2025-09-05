@@ -1,10 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
-      <Header
-        title="Admin Panel"
-        subtitle="Manage users and their roles"
-      />
+      <Header >
+        Admin Panel
+        <template #subtitle>Manage users and their roles</template>
+      </Header>
 
       <Panel>
         <div v-if="loading" class="flex justify-center py-8">
