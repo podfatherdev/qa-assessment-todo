@@ -19,91 +19,21 @@
       </button>
     </div>
 
-    <div v-else class="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">Users</h2>
+    <div v-else class="space-y-3">
+      <div class="mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Users ({{ users.length }})</h2>
       </div>
       
-      <div class="divide-y divide-gray-200">
-        <div 
-          v-for="user in users" 
-          :key="user.id" 
-          class="px-6 py-4 flex items-center justify-between hover:bg-gray-50"
-        >
-          <div class="flex items-center gap-4">
-            <div
-              :class="[
-                'w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold',
-                user.role === 'admin' ? 'bg-purple-500' : 'bg-blue-500'
-              ]"
-            >
-              {{ user.name.charAt(0) }}
-            </div>
-            
-            <div class="flex-1">
-              <div v-if="editingUser?.id === user.id" class="space-y-2">
-                <input
-                  v-model="editForm.name"
-                  type="text"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="User name"
-                />
-                <select
-                  v-model="editForm.role"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-              
-              <div v-else>
-                <h3 class="font-medium text-gray-900">{{ user.name }}</h3>
-                <p class="text-sm text-gray-500">@{{ user.username }}</p>
-                <span
-                  :class="[
-                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
-                    user.role === 'admin' 
-                      ? 'bg-purple-100 text-purple-800' 
-                      : 'bg-blue-100 text-blue-800'
-                  ]"
-                >
-                  {{ user.role }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <div v-if="editingUser?.id === user.id" class="flex gap-2">
-              <button
-                @click="saveUser"
-                :disabled="saving"
-                class="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {{ saving ? 'Saving...' : 'Save' }}
-              </button>
-              <button
-                @click="cancelEdit"
-                :disabled="saving"
-                class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 disabled:opacity-50 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-            
-            <button
-              v-else
-              @click="startEdit(user)"
-              class="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Edit
-            </button>
-          </div>
-        </div>
-      </div>
+      <UserItem
+        v-for="user in users"
+        :key="user.id"
+        :user="user"
+        @update-name="updateUserName"
+        @update-role="updateUserRole"
+      />
     </div>
 
+    <!-- Success notification -->
     <div v-if="successMessage" class="fixed bottom-4 right-4 bg-green-50 border border-green-200 rounded-md p-4 shadow-lg">
       <p class="text-green-700">{{ successMessage }}</p>
     </div>
@@ -113,18 +43,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { AdminService } from '../services/adminService';
+import UserItem from '../components/UserItem.vue';
 import type { User } from '../types/todo';
 
 const users = ref<User[]>([]);
 const loading = ref(false);
-const saving = ref(false);
 const error = ref<string | null>(null);
 const successMessage = ref<string | null>(null);
-const editingUser = ref<User | null>(null);
-const editForm = ref({
-  name: '',
-  role: 'user' as 'admin' | 'user'
-});
 
 const fetchUsers = async () => {
   loading.value = true;
@@ -140,56 +65,37 @@ const fetchUsers = async () => {
   }
 };
 
-const startEdit = (user: User) => {
-  editingUser.value = user;
-  editForm.value = {
-    name: user.name,
-    role: user.role
-  };
-};
-
-const cancelEdit = () => {
-  editingUser.value = null;
-  editForm.value = {
-    name: '',
-    role: 'user'
-  };
-};
-
-const saveUser = async () => {
-  if (!editingUser.value) return;
-  
-  saving.value = true;
-  
+const updateUserName = async (userId: number, name: string) => {
   try {
-    const updates: { name?: string; role?: 'admin' | 'user' } = {};
+    const updatedUser = await AdminService.updateUser(userId, { name });
     
-    if (editForm.value.name !== editingUser.value.name) {
-      updates.name = editForm.value.name;
+    // Update the user in our local list
+    const userIndex = users.value.findIndex(u => u.id === userId);
+    if (userIndex !== -1) {
+      users.value[userIndex] = updatedUser;
     }
     
-    if (editForm.value.role !== editingUser.value.role) {
-      updates.role = editForm.value.role;
-    }
-    
-    if (Object.keys(updates).length > 0) {
-      const updatedUser = await AdminService.updateUser(editingUser.value.id, updates);
-      
-      // Update the user in our local list
-      const userIndex = users.value.findIndex(u => u.id === updatedUser.id);
-      if (userIndex !== -1) {
-        users.value[userIndex] = updatedUser;
-      }
-      
-      showSuccessMessage('User updated successfully!');
-    }
-    
-    cancelEdit();
+    showSuccessMessage('User name updated successfully!');
   } catch (err) {
-    error.value = 'Failed to update user. Please try again.';
-    console.error('Error updating user:', err);
-  } finally {
-    saving.value = false;
+    error.value = 'Failed to update user name. Please try again.';
+    console.error('Error updating user name:', err);
+  }
+};
+
+const updateUserRole = async (userId: number, role: 'admin' | 'user') => {
+  try {
+    const updatedUser = await AdminService.updateUser(userId, { role });
+    
+    // Update the user in our local list
+    const userIndex = users.value.findIndex(u => u.id === userId);
+    if (userIndex !== -1) {
+      users.value[userIndex] = updatedUser;
+    }
+    
+    showSuccessMessage(`User role changed to ${role} successfully!`);
+  } catch (err) {
+    error.value = 'Failed to update user role. Please try again.';
+    console.error('Error updating user role:', err);
   }
 };
 
