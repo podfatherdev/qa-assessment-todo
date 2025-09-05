@@ -46,12 +46,12 @@
         <div class="mt-8 pt-6 border-t border-gray-200">
           <div class="text-sm text-gray-600 space-y-2">
             <div class="flex items-center">
-              <div class="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
-              <span><strong>Admin:</strong> Can see and manage all todos</span>
-            </div>
-            <div class="flex items-center">
               <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
               <span><strong>User:</strong> Can only see and manage their own todos</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
+              <span><strong>Admin:</strong> Can see and manage all todos</span>
             </div>
           </div>
         </div>
