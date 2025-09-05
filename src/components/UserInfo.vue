@@ -16,13 +16,24 @@
       </div>
     </div>
 
-    <button
-      @click="logout"
-      class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200"
-      data-testid="logout-button"
-    >
-      Log out
-    </button>
+    <div class="flex items-center gap-2">
+      <router-link
+        v-if="user.role === 'admin'"
+        to="/admin"
+        class="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-900 hover:bg-purple-50 rounded-md transition-colors duration-200"
+        data-testid="admin-link"
+      >
+        Admin Panel
+      </router-link>
+
+      <button
+        @click="logout"
+        class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors duration-200"
+        data-testid="logout-button"
+      >
+        Log out
+      </button>
+    </div>
   </div>
 </template>
 

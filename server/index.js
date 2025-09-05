@@ -218,6 +218,49 @@ app.put('/api/todos/:id/reassign', authenticateToken, (req, res) => {
   res.json(todos[todoIndex]);
 });
 
+// Admin Routes (admin only)
+
+// GET /api/admin/users - Get all users (admin only)
+app.get('/api/admin/users', authenticateToken, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  res.json(users);
+});
+
+// PUT /api/admin/users/:id - Update user name or role (admin only)
+app.put('/api/admin/users/:id', authenticateToken, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  const id = parseInt(req.params.id);
+  const { name, role } = req.body;
+
+  const userIndex = users.findIndex(user => user.id === id);
+
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if (name !== undefined) {
+    if (!name || name.trim() === '') {
+      return res.status(400).json({ error: 'Name cannot be empty' });
+    }
+    users[userIndex].name = name.trim();
+  }
+
+  if (role !== undefined) {
+    if (!['admin', 'user'].includes(role)) {
+      return res.status(400).json({ error: 'Role must be either "admin" or "user"' });
+    }
+    users[userIndex].role = role;
+  }
+
+  res.json(users[userIndex]);
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
