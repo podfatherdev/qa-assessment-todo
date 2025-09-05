@@ -10,7 +10,7 @@
         </p>
       </header>
 
-      <UserInfo :user="currentUser!" @logout="handleLogout" />
+      <UserInfo v-if="currentUser" :user="currentUser" @logout="handleLogout" />
 
       <div class="bg-white rounded-xl shadow-lg p-6 animate-fade-in">
         <TodoInput @add-todo="addTodo" />
