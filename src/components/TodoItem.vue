@@ -60,55 +60,17 @@
       
       <!-- User assignment indicator -->
       <div class="flex-1 self-baseline">
-        <div class="relative">
-          <button
-            @click="toggleUserSelector"
-            :class="[
-              'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-semibold transition-all duration-200 hover:scale-110',
-              getUserColor(todo.userId)
-            ]"
-            :title="canReassign ? `Click to reassign from ${getUserName(todo.userId)}` : getUserName(todo.userId)"
-            data-testid="user-indicator"
-            :disabled="!canReassign"
-          >
-            {{ getUserInitial(todo.userId) }}
-          </button>
-
-          <!-- User selector dropdown -->
-          <div
-            v-if="showSelector"
-            class="absolute top-8 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[160px]"
-            data-testid="user-selector"
-          >
-            <div class="p-2">
-              <p class="text-xs text-gray-500 mb-2 font-medium">Reassign to:</p>
-              <button
-                v-for="user in availableUsers"
-                :key="user.id"
-                @click="reassignTask(user.id)"
-                :class="[
-                  'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors duration-200',
-                  user.id === todo.userId 
-                    ? 'bg-gray-100 text-gray-500 cursor-default' 
-                    : 'hover:bg-gray-50 text-gray-700'
-                ]"
-                :disabled="user.id === todo.userId"
-                data-testid="user-option"
-              >
-                <div 
-                  :class="[
-                    'w-4 h-4 rounded-full flex items-center justify-center text-white text-xs font-semibold',
-                    getUserColor(user.id)
-                  ]"
-                >
-                  {{ getUserInitial(user.id) }}
-                </div>
-                <span>{{ user.name }}</span>
-                <span v-if="user.id === todo.userId" class="text-xs text-gray-400 ml-auto">(current)</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <DropdownSelector
+          :current-value="todo.userId"
+          :options="userOptions"
+          :title="canReassign ? `Click to reassign from ${getUserName(todo.userId)}` : getUserName(todo.userId)"
+          dropdown-title="Reassign to:"
+          size="sm"
+          :disabled="!canReassign"
+          test-id-prefix="user"
+          dropdown-width="md"
+          @change="handleUserChange"
+        />
       </div>
 
       <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -136,18 +98,13 @@
       </div>
     </div>
 
-    <!-- Click outside overlay to close selector -->
-    <div
-      v-if="showSelector"
-      class="fixed inset-0 z-5"
-      @click="closeUserSelector"
-      data-testid="selector-overlay"
-    ></div>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue';
+import DropdownSelector from './DropdownSelector.vue';
 import type { Todo } from '../types/todo';
 
 const props = defineProps<{
@@ -166,48 +123,38 @@ const emit = defineEmits<{
 const editing = ref(false);
 const editText = ref(props.todo.text);
 const editInput = ref<HTMLInputElement | null>(null);
-const showSelector = ref(false);
 
-// User mapping for display purposes
+// User mapping for display purposes (kept for getUserName function)
 const userMap = {
   1: { name: 'Admin User', initial: 'A', color: 'bg-purple-500' },
   2: { name: 'Regular User', initial: 'U', color: 'bg-blue-500' }
 };
 
-const availableUsers = [
-  { id: 1, name: 'Admin User' },
-  { id: 2, name: 'Regular User' }
+const userOptions = [
+  { 
+    value: 1, 
+    label: 'Admin User', 
+    color: 'bg-purple-500', 
+    initial: 'A' 
+  },
+  { 
+    value: 2, 
+    label: 'Regular User', 
+    color: 'bg-blue-500', 
+    initial: 'U' 
+  }
 ];
 
 const canReassign = computed(() => {
   return props.currentUserRole === 'admin';
 });
 
-const getUserColor = (userId: number) => {
-  return userMap[userId as keyof typeof userMap]?.color || 'bg-gray-500';
-};
-
 const getUserName = (userId: number) => {
   return userMap[userId as keyof typeof userMap]?.name || 'Unknown User';
 };
 
-const getUserInitial = (userId: number) => {
-  return userMap[userId as keyof typeof userMap]?.initial || '?';
-};
-
-const toggleUserSelector = () => {
-  if (!canReassign.value) return;
-  showSelector.value = !showSelector.value;
-};
-
-const closeUserSelector = () => {
-  showSelector.value = false;
-};
-
-const reassignTask = (userId: number) => {
-  if (userId === props.todo.userId) return;
+const handleUserChange = (userId: number) => {
   emit('reassign', props.todo.id, userId);
-  showSelector.value = false;
 };
 const toggleComplete = () => {
   emit('toggle', props.todo.id);
