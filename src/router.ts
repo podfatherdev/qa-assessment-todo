@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TodosPage from '../views/TodosPage.vue'
-import { AuthService } from '../services/authService'
-import LoginPage from '../components/LoginPage.vue'
+import TodosPage from './views/TodosPage.vue'
+import { AuthService } from './services/authService'
+import LoginPage from './components/LoginPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
