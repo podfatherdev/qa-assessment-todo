@@ -222,9 +222,10 @@ app.put('/api/todos/:id/reassign', authenticateToken, (req, res) => {
 
 // GET /api/admin/users - Get all users (admin only)
 app.get('/api/admin/users', authenticateToken, (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required' });
-  }
+  // Uh oh, security bug!
+  // if (req.user.role !== 'admin') {
+  //   return res.status(403).json({ error: 'Admin access required' });
+  // }
 
   res.json(users);
 });

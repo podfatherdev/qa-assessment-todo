@@ -31,7 +31,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminPage,
-      meta: { requiresAuth: true, requiresAdmin: true }
+      meta: { requiresAuth: true }
     },
     // Redirect any unknown routes to login
     {
