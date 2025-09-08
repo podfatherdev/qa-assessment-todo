@@ -2,7 +2,11 @@
 
 Welcome! Our junior engineer has created this simple Todo app, which allows users to create and manage tasks. Below are the requirements and acceptance criteria for the application. When you have read through these, please test the app yourself and review it for any issues.
 
-You can use the button in the top right, **Open Preview in new tab**, to preview the app without this editor in the way. When doing this, you may need to allow popups for this specific url in your browser. Subsequently, you should be able to open, close and refresh as many tabs as you like. Just be sure to keep this Stackblitz page open.
+You can use the button in the top right, **Open Preview in new tab**, to preview the app without this editor in the way. When doing this, you may need to allow popups for this specific url in your browser. (You do not need to click the "Connect to Project" button.)
+
+<img width="547" height="422" alt="image" src="https://github.com/user-attachments/assets/5f7d279e-dcd1-463d-8921-c0c9d22aca51" />
+
+Subsequently, you should be able to open, close and refresh as many tabs as you like. Just be sure to keep this Stackblitz page open.
 
 ### Requirements
 
