@@ -1,39 +1,47 @@
-# BugDo - Todo App QA Demo
+# BugDo - QA Engineer interview assessment
 
-A Vue 3 + TypeScript todo application with authentication and role-based access control.
+This is a little demo todo app used to assess candidate QA Engineers.
 
-## Features
+See the accompanying [Confluence page](https://podfather.atlassian.net/wiki/spaces/ENG/pages/3803283457/QA+technical+assessment).
 
-- **Authentication**: Choose between User or Admin roles
-- **Role-based Access**: 
-  - Users can only see and manage their own todos
-  - Admins can see and manage all todos
-- **Client-side Routing**: Clean URLs with Vue Router
-- **Real-time Updates**: Full CRUD operations for todos
-- **Responsive Design**: Built with Tailwind CSS
+## Instructions for interview
 
-## Routes
+We will use Stackblitz to send the app to the candidate.
 
-- `/` - Login page (redirects to `/todos` if already authenticated)
-- `/todos` - Todo list page (requires authentication)
+* Find the Stackblitz project, or create from Github repository
+* Double check that Stackblitz automatically runs `npm i` and `npm run dev`, and the application shows in the Preview panel
+  * If the Preview shows "Cannot GET /" it's probably navigated to port 3000 (the backend Node server) rather than port 5173 (the Vite dev server for the frontend)
+* Use the Share menu to get a link for the candidate. **Set the file to open as: INSTRUCTIONS.md**
+* Invite the candidate to open the link, and confirm that they can see the application running in the Preview panel
+* Invite them to read the INSTRUCTIONS.md document, then open the Preview in a new tab
 
-## Getting Started
+## Development
 
-1. Install dependencies:
+1. Install dependencies. You can use npm or pnpm:
    ```bash
-   pnpm install
+   npm i
    ```
-
+   or
+   ```bash
+   pnpm i
+   ```
 2. Start the development server:
    ```bash
-   pnpm run dev
+   pnpm dev
    ```
+   or
+   ```bash
+   npm run dev
+   ```
+   This uses `concurently` to run both Vite for the frontend (port 5173) and Node/Express backend (port 3000).
 
-This will start both the Express backend server and the Vue frontend development server.
+## Technical details
 
-## Tech Stack
+- **Frontend**: Vue 3, TypeScript, Vue Router, Tailwind, Vite
+- **Backend**: Express.js, JWT authentication, in-memory mock database
 
-- **Frontend**: Vue 3, TypeScript, Vue Router, Tailwind CSS
-- **Backend**: Express.js, JWT authentication
-- **Build Tool**: Vite
-- **Package Manager**: pnpm
+### Routes
+
+- `/login` (redirects from `/`) - Login page
+- `/todos` - Todo list page (requires authentication)
+- `/admin` - Admin panel for user management (theoretically requires admin role, but this is one of our bugs)
