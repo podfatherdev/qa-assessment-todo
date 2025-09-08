@@ -4,7 +4,7 @@ Welcome! Our junior engineer has created this simple Todo app, which allows user
 
 You can use the button in the top right, **Open Preview in new tab**, to preview the app without this editor in the way. When doing this, you may need to allow popups for this specific url in your browser. (You do not need to click the "Connect to Project" button.)
 
-<img alt="Stackblitz screenshot" src="docs/stackblitz-preview-popups-blocked.png" width="400" />
+<img alt="Stackblitz screenshot" src="docs/stackblitz-preview-popups-blocked.png" width="500" />
 
 Subsequently, you should be able to open, close and refresh as many tabs as you like. Just be sure to keep this Stackblitz page open.
 
