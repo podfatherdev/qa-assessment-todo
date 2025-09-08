@@ -11,7 +11,7 @@
       <UserInfo v-if="currentUser" :user="currentUser" @logout="handleLogout" />
 
       <Panel>
-        <TodoInput @add-todo="addTodo" />
+        <TodoInput ref="todoInput" @add-todo="addTodo" />
 
         <TodoFilter
           :current-filter="currentFilter"
@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 import Header from '../components/Header.vue';
 import Panel from '../components/Panel.vue';
@@ -95,6 +95,8 @@ const currentFilter = ref<FilterType>('all');
 const loading = ref(false);
 const error = ref('');
 const currentUser = ref<User | null>(null);
+
+const todoInput = useTemplateRef<InstanceType<typeof TodoInput>>('todoInput');
 
 const filteredTodos = computed(() => {
   switch (currentFilter.value) {
@@ -161,6 +163,7 @@ const loadTodos = async () => {
 const addTodo = async (text: string) => {
   try {
     const newTodo = await TodoService.createTodo(text);
+    todoInput.value?.clearInput();
     todos.value.push(newTodo);
   } catch (err) {
     error.value = 'Failed to add todo. Please try again.';

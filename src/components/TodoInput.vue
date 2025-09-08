@@ -31,6 +31,10 @@ const emit = defineEmits<{
     (e: "add-todo", text: string): void;
 }>();
 
+defineExpose({
+  clearInput
+});
+
 const newTodo = ref('');
 const error = ref('');
 
@@ -50,4 +54,8 @@ const addTodo = () => {
   error.value = '';
   emit('add-todo', text);
 };
+
+function clearInput () {
+  newTodo.value = '';
+}
 </script>
