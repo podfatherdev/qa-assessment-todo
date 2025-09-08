@@ -13,7 +13,8 @@ We will use Stackblitz to send the app to the candidate.
 - Use the Share menu to get a link for the candidate. **Set the "Default file to show" as: INSTRUCTIONS.md**
 - Invite the candidate to open the link, and confirm that they can see the application running in the Preview panel
 - Invite them to read the INSTRUCTIONS.md document, then use the button in the top right: "Open Preview in new tab"
-  - They are able to open multiple tabs, close and reopen, etc. as long as their Stackblitz page stays open
+  - They might see a "Popup blocked" message from their browser, and a Stackblitz page with "In order to see your preview, you need to connect this tab to its project". All they need to do is allow popups for this specific url in their browser—**no need to "Connect to Project"**.
+  - Subsequently, they'll be able to open multiple tabs, close and reopen, etc. as long as their Stackblitz page stays open
 
 ## Development
 
