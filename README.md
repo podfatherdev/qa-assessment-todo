@@ -11,9 +11,10 @@ We will use Stackblitz to send the app to the candidate.
 * Find the Stackblitz project, or create from Github repository
 * Double check that Stackblitz automatically runs `npm i` and `npm run dev`, and the application shows in the Preview panel
   * If the Preview shows "Cannot GET /" it's probably navigated to port 3000 (the backend Node server) rather than port 5173 (the Vite dev server for the frontend)
-* Use the Share menu to get a link for the candidate. **Set the file to open as: INSTRUCTIONS.md**
+* Use the Share menu to get a link for the candidate. **Set the "Default file to show" as: INSTRUCTIONS.md**
 * Invite the candidate to open the link, and confirm that they can see the application running in the Preview panel
-* Invite them to read the INSTRUCTIONS.md document, then open the Preview in a new tab
+* Invite them to read the INSTRUCTIONS.md document, then use the button in the top right: "Open Preview in new tab"
+  * They are able to open multiple tabs, close and reopen, etc. as long as their Stackblitz page stays open
 
 ## Development
 
