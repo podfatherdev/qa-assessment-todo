@@ -2,8 +2,6 @@
 
 This is a little demo todo app used to assess candidate QA Engineers.
 
-See the accompanying [Confluence page](https://podfather.atlassian.net/wiki/spaces/ENG/pages/3803283457/QA+technical+assessment).
-
 ## Instructions for interview
 
 We will use Stackblitz to send the app to the candidate.
