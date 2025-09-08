@@ -36,12 +36,17 @@ const error = ref('');
 
 const addTodo = () => {
   const text = newTodo.value.trim();
-
+  
   if (!text) {
     error.value = 'Please enter a todo item';
     return;
   }
-
+  
+  if (text.length > 200) {
+    error.value = 'Todo item must be less than 200 characters';
+    return;
+  }
+  
   error.value = '';
   emit('add-todo', text);
 };
